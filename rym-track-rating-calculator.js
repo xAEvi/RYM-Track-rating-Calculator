@@ -48,7 +48,6 @@ function score() {
 
     // Get score to scale of 10
     const finalScore = totalScore / totalSeconds;
-    console.log(finalScore.toFixed(2));
 
     // Update button text
     trackRatingBtn.textContent = "Track ratings [" + finalScore.toFixed(2) + "]";
