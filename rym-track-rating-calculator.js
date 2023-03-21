@@ -1,54 +1,52 @@
-
 // Save buttons locations
 const trackRatingBtn = document.querySelector('#track_rating_btn');
 const trackRatingsSave = document.querySelector('#track_ratings_save_btn');
 
-trackRatingBtn.addEventListener('click',score);
-trackRatingsSave.addEventListener('click',score);
-
-// Find track ratings
+// Find track ratings and songs
 const elements = document.querySelectorAll('[id^="rating_num_z_"]');
-
-// Find songs duration
 const duration = document.querySelector('.section_tracklisting').querySelectorAll('span.tracklist_duration');
 
-function score() {
-    // Save ratings
-    const ratings = [];
-    elements.forEach((element) => {
-        const rating = element.textContent.trim();
-        ratings.push(rating);
-    });
+// Get final score
+const calculateScore = (ratings, seconds) => {
+    const totalSeconds = seconds.reduce((x, y) => Number(x) + Number(y), 0);
+    let totalScore = 0;
 
-    // Save songs duration
+    // Verify if there is at least one song rated
+    if (ratings.length && seconds.length && ratings.length === seconds.length) {
+      for (let i = 0; i < seconds.length; i++) {
+        totalScore += Number(ratings[i]) * 2 * Number(seconds[i]);
+      }
+      return totalScore / totalSeconds;
+    }
+    return null;
+}
+
+function score() {
+    const ratings = [];
     const seconds = [];
-    duration.forEach(span => {
-        const inSecond = span.dataset.inseconds;
-        seconds.push(inSecond);
-    });
+
+    // Save songs and ratings
+    elements.forEach(element => ratings.push(element.textContent.trim()));
+    duration.forEach(({ dataset: { inseconds } }) => seconds.push(inseconds));
 
     // Delete non rated songs
     for (let i = 0; i < seconds.length; i++) {
         if (ratings[i] === '---') {
           seconds.splice(i, 1);
           ratings.splice(i, 1);
+          i--;
         }
     }
 
-    // Sum total duration
-    let totalSeconds = seconds.reduce((x, y) => {
-        return Number(x) + Number(y);
-    }, 0);
+    // Calculate the score and update the button
+    const finalScore = calculateScore(ratings, seconds);
 
-    // Get score
-    let totalScore = 0;
-    for (let i = 0; i < seconds.length; i++){
-        totalScore += Number(ratings[i]) * 2 * Number(seconds[i]);
+    if (finalScore !== null) {
+        trackRatingBtn.textContent = `Track ratings [${finalScore.toFixed(2)}]`;
+    } else {
+        trackRatingBtn.textContent = 'Track ratings';
     }
-
-    // Get score to scale of 10
-    const finalScore = totalScore / totalSeconds;
-
-    // Update button text
-    trackRatingBtn.textContent = "Track ratings [" + finalScore.toFixed(2) + "]";
 }
+
+trackRatingBtn.addEventListener('click',score);
+trackRatingsSave.addEventListener('click',score);
