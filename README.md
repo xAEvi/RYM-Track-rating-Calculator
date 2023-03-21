@@ -15,4 +15,4 @@ Busqué un sistema de calificación capaz de que se valore más las canciones m�
 
 Sólo tienes que empezar a dar calificación en la sección "Track Rating" y, tras pulsar el botón de guardar, se mostrará la puntuación calculada.
 
-***Debes estar en la página de lanzamiento para usar este script.***
+***Debes estar en la página de release para usar este script.***
