@@ -27,7 +27,11 @@ function score() {
 
     // Save songs and ratings
     elements.forEach(element => ratings.push(element.textContent.trim()));
-    duration.forEach(({ dataset: { inseconds } }) => seconds.push(inseconds));
+    duration.forEach(({ dataset: { inseconds } }) => {
+        if (inseconds > 0) {
+            seconds.push(inseconds);
+        }
+    });
 
     // Delete non rated songs
     for (let i = 0; i < seconds.length; i++) {
